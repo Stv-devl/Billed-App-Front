@@ -14,7 +14,7 @@ export const filteredBills = (data, status) => {
         if (typeof jest !== "undefined") {
           selectCondition = bill.status === status;
         } else {
-        /* istanbul ignore next */
+          /* istanbul ignore next */
           // in prod environment
           const userEmail = JSON.parse(localStorage.getItem("user")).email;
           selectCondition =
@@ -154,11 +154,26 @@ export default class {
       this.counter++;
     }
 
+    //Bug dashboard : when I open a second drowpdown then the billId divs are called 2 times.
+    //for fix we get all the bill-containers element and we go to search the display bill-card with the id
     bills.forEach((bill) => {
+      const billContainer = document.querySelector(
+        `#status-bills-container${index}`
+      );
+      const billCard = billContainer.querySelector(`#open-bill${bill.id}`);
+      if (billCard) {
+        billCard.addEventListener("click", (e) => {
+          this.handleEditTicket(e, bill, bills);
+        });
+      }
+    });
+
+    //before bug
+    /*bills.forEach((bill) => {
       $(`#open-bill${bill.id}`).click((e) =>
         this.handleEditTicket(e, bill, bills)
       );
-    });
+    });*/
 
     return bills;
   }
