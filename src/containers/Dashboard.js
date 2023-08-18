@@ -167,14 +167,12 @@ export default class {
         });
       }
     });
-
-    //before bug
+    //backup of bug
     /*bills.forEach((bill) => {
       $(`#open-bill${bill.id}`).click((e) =>
         this.handleEditTicket(e, bill, bills)
       );
     });*/
-
     return bills;
   }
 
