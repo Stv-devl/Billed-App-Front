@@ -2,7 +2,6 @@ import { ROUTES_PATH } from "../constants/routes.js";
 import Logout from "./Logout.js";
 
 //Bug n°3 here we fix the bug.If the user don't add a good format ("jpeg", "jpg", "png") so we have a message error and  When we add a image format who is not good we will have an error message and we empty fileInput. If format match we submit
-
 export default class NewBill {
   constructor({ document, onNavigate, store, localStorage }) {
     this.document = document;
@@ -13,19 +12,19 @@ export default class NewBill {
       `form[data-testid="form-new-bill"]`
     );
     formNewBill.addEventListener("submit", this.handleSubmit);
-    const file = this.document.querySelector(`input[data-testid="file"]`);
-    file.addEventListener("change", this.handleChangeFile);
-    //bug N°3 add
-    this.sendPictures = this.document.getElementById("sendPictures"); //Bug N°3 => we add the id in the document views/NewBillUi.js
+    this.fileInput = this.document.querySelector(`input[data-testid="file"]`);
+    this.fileInput.addEventListener("change", this.handleChangeFile);
+    this.sendPictures = this.document.getElementById("sendPictures"); //Bug N°3 => we get the id of the container to send picture for add a span with an error message
     this.fileUrl = null;
     this.fileName = null;
     this.billId = null;
     new Logout({ document, localStorage, onNavigate });
   }
+
   handleChangeFile = (e) => {
     e.preventDefault();
-    const fileInput = document.querySelector(`input[data-testid="file"]`); //Bug N°3 =>add fileInput
-    const file = fileInput.files[0]; //change file with fileInput
+    /* const fileInput = document.querySelector(`input[data-testid="file"]`); //Bug N°3 =>add fileInput*/
+    const file = this.fileInput.files[0]; //Bug N°3 => change file with fileInput
     const filePath = e.target.value.split(/\\/g);
     const fileName = filePath[filePath.length - 1];
     //Bug N°3 => get the document extension
@@ -50,7 +49,6 @@ export default class NewBill {
           },
         })
         .then(({ fileUrl, key }) => {
-          console.log(fileUrl);
           this.billId = key;
           this.fileUrl = fileUrl;
           this.fileName = fileName;
@@ -58,7 +56,7 @@ export default class NewBill {
         .catch((error) => console.error(error));
     } else {
       //if not we change the value of fileInput and add the error message
-      fileInput.value = "";
+      this.fileInput.value = "";
       if (existingError) {
         existingError.remove(); //remove error message
       }

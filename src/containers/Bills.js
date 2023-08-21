@@ -42,12 +42,15 @@ export default class {
         .bills()
         .list()
         .then((snapshot) => {
+          //for fix the bug N°1 we sort the array before the new format of date (but we will have to change the test)
+          snapshot.sort((a, b) =>
+            new Date(a.date) < new Date(b.date) ? 1 : -1
+          );
+          console.log(snapshot);
           const bills = snapshot.map((doc) => {
             try {
               return {
                 ...doc,
-                //for fix the bug N°1 we get the isoDate format 2023-01-01
-                isoDate: doc.date,
                 date: formatDate(doc.date),
                 status: formatStatus(doc.status),
               };

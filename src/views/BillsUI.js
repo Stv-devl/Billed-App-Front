@@ -4,7 +4,9 @@ import LoadingPage from "./LoadingPage.js";
 import Actions from "./Actions.js";
 
 const row = (bill) => {
-  return `
+  //add if (bill.name)for don't display "null" bills
+  if (bill.name)
+    return `
     <tr>
       <td>${bill.type}</td>
       <td>${bill.name}</td>
@@ -18,29 +20,9 @@ const row = (bill) => {
     `;
 };
 
-//fix the bug (N°1 = ) : I do a sort() with the isoDate for filter dates,
 export const rows = (data) => {
-  return data && data.length
-    ? data
-        .sort((a, b) => {
-          if (a.isoDate) return a.isoDate < b.isoDate ? 1 : -1;
-          else return a.date < b.date ? 1 : -1;
-        })
-        .map((bill) => row(bill))
-        .join("")
-    : "";
+  return data && data.length ? data.map((bill) => row(bill)).join("") : "";
 };
-/*      .sort((a, b) => {
-          console.log(a.isoDate, b.isoDate);
-          if (a.isoDate) return a.isoDate < b.isoDate ? 1 : -1;
-          else return a.date < b.date ? 1 : -1;
-        })
-        .sort((a, b) => {
-          if (a.isoDate === null || b.isoDate === null) {
-            return a.isoDate === null ? 1 : -1;
-          }
-          return a.isoDate < b.isoDate ? 1 : -1;
-        })*/
 
 export default ({ data: bills, loading, error }) => {
   const modal = () => `
