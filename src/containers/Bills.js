@@ -38,6 +38,7 @@ export default class {
 
   getBills = () => {
     if (this.store) {
+      console.log(this.store);
       return this.store
         .bills()
         .list()
@@ -46,7 +47,6 @@ export default class {
           snapshot.sort((a, b) =>
             new Date(a.date) < new Date(b.date) ? 1 : -1
           );
-          console.log(snapshot);
           const bills = snapshot.map((doc) => {
             try {
               return {
