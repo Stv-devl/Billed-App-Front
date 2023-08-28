@@ -41,9 +41,9 @@ export default class {
         .bills()
         .list()
         .then((snapshot) => {
-          snapshot.sort((a, b) =>
+          /*snapshot.sort((a, b) =>
             new Date(a.date) < new Date(b.date) ? 1 : -1
-          );
+          );*/
           const bills = snapshot
             //j'ai ajouter un filter pour enlever les null
             .filter((doc) => doc.name !== null)
