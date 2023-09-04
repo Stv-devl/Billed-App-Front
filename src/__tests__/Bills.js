@@ -7,7 +7,6 @@ import { screen, waitFor } from "@testing-library/dom";
 import userEvent from "@testing-library/user-event";
 import BillsUI from "../views/BillsUI.js";
 import Bills from "../containers/Bills.js";
-import { bills } from "../fixtures/bills.js";
 import mockStore from "../__mocks__/store";
 import { ROUTES, ROUTES_PATH } from "../constants/routes";
 import router from "../app/Router.js";
@@ -54,29 +53,31 @@ describe("Given I am connected as an employee", () => {
           store: mockStore,
           localStorage: window.localStorage,
         });
-
-        document.body.innerHTML = BillsUI({ data: bills });
       });
 
       test("Then clicking on the NewBill button should display the new bill form page", () => {
-        const handleClickNewBill1 = jest.spyOn(
+        const handleClickNewBill = jest.spyOn(
           billsContainer,
           "handleClickNewBill"
         );
         const buttonNewBill = screen.getByTestId("btn-new-bill");
-        buttonNewBill.addEventListener("click", handleClickNewBill1);
+        buttonNewBill.addEventListener("click", handleClickNewBill);
         userEvent.click(buttonNewBill);
 
         const newBillForm = screen.getByTestId(`form-new-bill`);
 
-        expect(handleClickNewBill1).toHaveBeenCalled();
+        expect(handleClickNewBill).toHaveBeenCalled();
         expect(newBillForm).toBeTruthy();
       });
 
-      test("Then clicking on the eyes buttons should display the card with the justification image", () => {
+      test("Then clicking on the eyes buttons should display the card with the justification image", async () => {
+        const bills = await mockStore.bills().list();
+
+        document.body.innerHTML = BillsUI({ data: bills });
         $.fn.modal = jest.fn();
 
         const icon = screen.getAllByTestId("icon-eye")[0];
+
         const handleClickIconEye = jest.fn(() =>
           billsContainer.handleClickIconEye(icon)
         );
@@ -88,7 +89,7 @@ describe("Given I am connected as an employee", () => {
 
         expect(handleClickIconEye).toHaveBeenCalled();
         expect(screen.getByText("Justificatif"));
-        expect(modaleFile).toBeTruthy();
+        expect(modaleFile).toBeInTheDocument();
       });
 
       //change the test for verify sort() in getBills()
@@ -99,6 +100,18 @@ describe("Given I am connected as an employee", () => {
         const datesSorted = [...datesListe].sort(antiChrono);
         expect(datesSorted).toEqual(datesListe);
       });
+      //test backup
+      /* test("Then bills should be ordered from earliest to latest", () => {
+        document.body.innerHTML = BillsUI({ data: bills });
+        const dates = screen
+          .getAllByText(
+            /^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$/i
+          )
+          .map((a) => a.innerHTML);
+        const antiChrono = (a, b) => (a < b ? 1 : -1);
+        const datesSorted = [...dates].sort(antiChrono);
+        expect(dates).toEqual(datesSorted);
+      });*/
     });
   });
 });
@@ -125,10 +138,6 @@ describe("Given I am a user connected as employee", () => {
     });
 
     test("then fetches bills from mock API GET", async () => {
-      const onNavigate = (pathname) => {
-        document.body.innerHTML = ROUTES({ pathname });
-      };
-
       const billsContainer = new Bills({
         document,
         onNavigate,

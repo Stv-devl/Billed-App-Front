@@ -95,6 +95,7 @@ export default class {
   };
 
   handleEditTicket(e, bill, bills) {
+    /*console.log(bill);*/
     if (this.counter === undefined || this.id !== bill.id) this.counter = 0;
     if (this.id === undefined || this.id !== bill.id) this.id = bill.id;
     if (this.counter % 2 === 0) {
@@ -156,6 +157,7 @@ export default class {
 
     //Bug dashboard : when I open a second drowpdown then the billId divs are called 2 times.
     //for fix we get all the bill-containers element and we go to search the display bill-card with the id
+
     bills.forEach((bill) => {
       const billContainer = document.querySelector(
         `#status-bills-container${index}`
@@ -163,17 +165,19 @@ export default class {
       const billCard = billContainer.querySelector(`#open-bill${bill.id}`);
       if (billCard) {
         billCard.addEventListener("click", (e) => {
+          console.log(bill);
           this.handleEditTicket(e, bill, bills);
         });
       }
     });
     //backup of bug
-    /*bills.forEach((bill) => {
+    /*
+    bills.forEach((bill) => {
       $(`#open-bill${bill.id}`).click((e) =>
         this.handleEditTicket(e, bill, bills)
       );
-    });*/
-    return bills;
+    });
+    return bills;*/
   }
 
   getBillsAllUsers = () => {

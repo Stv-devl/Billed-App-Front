@@ -4,9 +4,7 @@ import LoadingPage from "./LoadingPage.js";
 import Actions from "./Actions.js";
 
 const row = (bill) => {
-  //add if (bill.name)for don't display "null" bills
-  if (bill.name)
-    return `
+  return `
     <tr>
       <td>${bill.type}</td>
       <td>${bill.name}</td>

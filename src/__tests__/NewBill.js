@@ -7,7 +7,7 @@ import userEvent from "@testing-library/user-event";
 import NewBillUI from "../views/NewBillUI.js";
 import NewBill from "../containers/NewBill.js";
 import mockStore from "../__mocks__/store";
-import { ROUTES, ROUTES_PATH } from "../constants/routes";
+import { ROUTES_PATH } from "../constants/routes";
 import router from "../app/Router.js";
 import { localStorageMock } from "../__mocks__/localStorage.js";
 
@@ -49,6 +49,7 @@ describe("Given I am connected as an employee", () => {
     describe("When I send a wrong image format (not to be jpg, jpeg, png)", () => {
       test("then should have an error message", async () => {
         document.body.innerHTML = NewBillUI();
+
         const newbill = new NewBill({
           document,
           onNavigate,
@@ -128,10 +129,6 @@ describe("Given I am connected as an employee", () => {
     });
     describe("When I submit the form", () => {
       test("Then we launch handleSubmit and send new bill data to updateBill ", async () => {
-        const onNavigate = (pathname) => {
-          window.location.innerHTML = ROUTES({ pathname });
-        };
-
         document.body.innerHTML = NewBillUI();
 
         const newbill = new NewBill({
